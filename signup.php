@@ -1,7 +1,40 @@
+<?php 
+session_start();
+
+	include("connection.php");
+	include("funcation.php");
+
+
+	if($_SERVER['REQUEST_METHOD'] == "POST")
+	{
+		//something was posted
+		$user_name = $_POST['user_name'];
+		$password = $_POST['password'];
+		$email_fld = $_POST['email_fld'];
+
+		if(!empty($user_name) && !empty($password) && !is_numeric($user_name)  && !empty($email_fld) )
+		{
+
+			//save to database
+			$user_id = random_num(20);
+			$query = "insert into users (user_id,user_name,email_fld , password) values ('$user_id','$user_name','$email_fld' ,'$password')";
+
+			mysqli_query($con, $query);
+
+			header("Location: login.php");
+			die;
+		}else
+		{
+			echo "Please enter some valid information!";
+		}
+	}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
-<head profile="https://www.w3.org/2005/10/profile">
+<head>
   <!-- Basic -->
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -13,11 +46,7 @@
   <meta name="author" content="" />
 
   <title>رحله</title>
-    <meta name="viewport" content="with=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.2.1/css/fontawesome.min.css" integrity="sha384-QYIZto+st3yW+o8+5OHfT6S482Zsvz2WfOzpFSXMF9zqeLcFV0/wlZpMtyFcZALm" crossorigin="anonymous">
-    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script defer src="test.js" ></script>
+
 
   <!-- bootstrap core css -->
   <link rel="stylesheet" type="text/css" href="bootstrap.css" />
@@ -30,8 +59,6 @@
   <!-- responsive style -->
   <link href="responsive.css" rel="stylesheet" />
 
-
-
 </head>
 
 <body class="sub_page">
@@ -41,8 +68,7 @@
     <header class="header_section">
       <div class="container-fluid">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="index.html">
-          </a>
+          <a class="navbar-brand" href="index.html"></a>
 
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class=""> </span>
@@ -53,14 +79,15 @@
               <li class="nav-item ">
                 <a class="nav-link" href="index.html">Home <span class="sr-only">(current)</span></a>
               </li>
-              <li class="nav-item active">
-                <a class="nav-link" >Course</a>
+              <li class="nav-item">
               </li>
               <li class="nav-item">
-                <a class="nav-link">Services</a>
+                <a class="nav-link" href="">Services</a>
+              </li>
+              <li class="nav-item active">
+                <a class="nav-link" >Sign Up </a>
               </li>
             </ul>
-           
           </div>
         </nav>
       </div>
@@ -68,19 +95,44 @@
     <!-- end header section -->
   </div>
 
-  <!-- about section -->
-  <div class="container1">
-    <div class="search-bar">
-      <input onkeyup="inputBox2(this.value)" type="text" id="input-box" placeholder="Search your course..." autocomplete="on">
-      <i style="font: size 20px ; color: #6464ac ; padding: 10px;" class="fa-solid fa-magnifying-glass"></i>
-      <div onclick="selectInput(this.list)" class="result-box"></div>
-      <!-- <button type="submit"><img src="images/serach.png"></button> -->
+  <!-- contact section -->
+
+  <section class="contact_section layout_padding">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-5 col-lg-4 offset-md-1">
+          <div class="form_container">
+            <div class="heading_container">
+              <h2>
+                Sign Up 
+              </h2>
+            </div>
+            <form method="post" >
+              <div>
+                <input type="text" name="user_name"  placeholder="Name " />
+              </div>
+              <div>
+                <input type="email" name="email_fld" placeholder="Email" />
+              </div>
+              <div>
+                <input type="password" name="password" placeholder="Password" />
+              </div>
+              <div class="d-flex" >
+                 
+                    <input class="btn1" type="submit" name="submit" value="Submit">
+                  
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="col-md-66">
+        <img src="Mobile.png">
+        </div>
+      </div>
     </div>
-  </div>
-<div class="courses">
-  
-</div>
-  <!-- end about section -->
+  </section>
+
+  <!-- end contact section -->
 
   <div class="footer_container">
     <!-- info section -->
@@ -99,13 +151,15 @@
                 <a class="" href="index.html">
                   Home
                 </a>
-                <a class="" href="">
+                <a class="" href="service.html">
                   Services
                 </a>
               </div>
             </div>
           </div>
-          
+          <div class="col-md-6 col-lg-3 ">
+           
+          </div>
           <div class="col-md-6 col-lg-3 mb-0 ml-auto">
             <div class="info_contact">
               <h4>
@@ -150,8 +204,8 @@
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
   </script>
   <!-- bootstrap js -->
-  <script src="js/bootstrap.js"></script>
-  <script src="js/custom.js"></script>
+  <script src="bootstrap.js"></script>
+  <script src="custom.js"></script>
 
 </body>
 
